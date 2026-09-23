@@ -1,4 +1,4 @@
-const API_BASE_URL ='https://client-backend-hfdw.onrender.com' || '/api';
+const API_BASE_URL = 'https://client-backend-hfdw.onrender.com';
 
 /**
  * Builds the backend URL used as the <video> source. The browser only ever talks to our
