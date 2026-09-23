@@ -1,0 +1,47 @@
+name: streaming-proxy
+
+# Production compose file used on the deploy host: pulls pre-built images from Docker Hub
+# instead of building from source (which docker-compose.yml does for local development).
+services:
+  proxy-server:
+    image: ${IMAGE_PREFIX:-yourdockerhubuser/streaming-proxy}-proxy-server:${IMAGE_TAG:-latest}
+    container_name: streaming-proxy-server
+    ports:
+      - "4000:4000"
+    environment:
+      PORT: 4000
+      PROXY_API_KEY: ${PROXY_API_KEY}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
+    restart: unless-stopped
+    networks:
+      - streaming-net
+
+  backend:
+    image: ${IMAGE_PREFIX:-yourdockerhubuser/streaming-proxy}-backend:${IMAGE_TAG:-latest}
+    container_name: streaming-backend
+    ports:
+      - "8080:8080"
+    environment:
+      PROXY_URL: http://proxy-server:4000
+      PROXY_API_KEY: ${PROXY_API_KEY}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS}
+    depends_on:
+      - proxy-server
+    restart: unless-stopped
+    networks:
+      - streaming-net
+
+  frontend:
+    image: ${IMAGE_PREFIX:-yourdockerhubuser/streaming-proxy}-frontend:${IMAGE_TAG:-latest}
+    container_name: streaming-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - streaming-net
+
+networks:
+  streaming-net:
+    driver: bridge

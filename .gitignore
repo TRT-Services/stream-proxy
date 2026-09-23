@@ -1,0 +1,30 @@
+# --- Node ---
+node_modules/
+npm-debug.log*
+dist/
+.env
+.env.local
+!.env.example
+
+# --- Java / Maven ---
+target/
+*.class
+*.jar
+!.mvn/wrapper/maven-wrapper.jar
+
+# --- IDE ---
+.vscode/
+.idea/
+*.iml
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+
+# --- Logs ---
+*.log
+logs/
+
+# --- Build outputs ---
+build/
+coverage/

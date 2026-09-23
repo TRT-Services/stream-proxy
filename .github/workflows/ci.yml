@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  proxy-server:
+    name: Proxy Server (Node)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: proxy-server
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: proxy-server/package-lock.json
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+      - name: Audit dependencies
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+  backend:
+    name: Spring Boot Backend (Maven)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: client/backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Build and verify
+        run: mvn -B clean verify
+
+  frontend:
+    name: React Frontend (Vite)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: client/frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: client/frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build

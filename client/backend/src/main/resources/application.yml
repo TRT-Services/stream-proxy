@@ -1,0 +1,33 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: streaming-proxy-backend
+
+proxy:
+  server:
+    url: ${PROXY_URL:http://localhost:4000}
+    api-key: ${PROXY_API_KEY:change-me-super-secret}
+
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+logging:
+  level:
+    com.streamingproxy.backend: INFO
