@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
+const API_BASE_URL ='https://client-backend-hfdw.onrender.com' || '/api';
 
 /**
  * Builds the backend URL used as the <video> source. The browser only ever talks to our
